@@ -8,6 +8,17 @@ var Todo = mongoose.model('Todo', {
 	text: String
 })
 
+// Configuración
+app.configure(function() {  
+    // Localización de los ficheros estÃ¡ticos
+    app.use(express.static(__dirname + '/public'));
+    // Muestra un log de todos los request en la consola        
+    app.use(express.logger('dev')); 
+    // Permite cambiar el HTML con el método POST                   
+    app.use(express.bodyParser());
+    // Simula DELETE y PUT                      
+    app.use(express.methodOverride());                  
+});
 
 
 app.get('/api/todos', function(req, res){
@@ -24,7 +35,7 @@ app.post('/api/todos', function(req, res) {
     Todo.create({
         text: req.body.text,
         done: false
-    }, function(err, todo){
+    }, function(err, todos){
         if(err) {
             res.send(err);
         }
@@ -43,7 +54,7 @@ app.post('/api/todos', function(req, res) {
 app.delete('/api/todos/:todo', function(req, res) {  
     Todo.remove({
         _id: req.params.todo
-    }, function(err, todo) {
+    }, function(err, todos) {
         if(err){
             res.send(err);
         }
